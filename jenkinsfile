@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    environment {
+        KUBECONFIG = '/var/lib/jenkins/.kube/config'
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Venkatesh-Nukala/Kubernetes.git'
+            }
+        }
+
+        stage('Verify Kubernetes Cluster') {
+            steps {
+                sh 'kubectl get nodes'
+            }
+        }
+
+        stage('Deploy Pod to Kubernetes') {
+            steps {
+                sh 'kubectl apply -f multi-container.yaml'
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                sh 'kubectl get pods'
+            }
+        }
+    }
+}
